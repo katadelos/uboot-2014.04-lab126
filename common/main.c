@@ -18,8 +18,10 @@
 #include <malloc.h>
 #include <menu.h>
 
+#ifndef CONFIG_DISABLE_MFGTOOL_ENV_OVERRIDE
 #ifdef is_boot_from_usb
 #include <environment.h>
+#endif
 #endif
 
 #include <post.h>
@@ -347,6 +349,7 @@ static void process_boot_delay(void)
 	s = getenv ("bootdelay");
 	bootdelay = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
 
+#ifndef CONFIG_DISABLE_MFGTOOL_ENV_OVERRIDE
 #ifdef is_boot_from_usb
 	if (is_boot_from_usb()) {
 		printf("Boot from USB for mfgtools\n");
@@ -355,6 +358,7 @@ static void process_boot_delay(void)
 	} else {
 		printf("Normal Boot\n");
 	}
+#endif
 #endif
 
 #ifdef CONFIG_OF_CONTROL
@@ -386,11 +390,13 @@ static void process_boot_delay(void)
 	else
 #endif /* CONFIG_BOOTCOUNT_LIMIT */
 		s = getenv ("bootcmd");
+#ifndef CONFIG_DISABLE_MFGTOOL_ENV_OVERRIDE
 #ifdef is_boot_from_usb
 	if (is_boot_from_usb()) {
 		s = getenv("bootcmd_mfg");
 		printf("Run bootcmd_mfg: %s\n", s);
 	}
+#endif
 #endif
 
 #ifdef CONFIG_OF_CONTROL
